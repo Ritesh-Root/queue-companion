@@ -82,6 +82,12 @@
   --border: oklch(0.90 0.015 220);
   --input: oklch(0.92 0.015 220);
   --ring: oklch(0.58 0.15 200);
+  --primary-glow: oklch(0.72 0.14 195);
+  --surface: oklch(0.99 0.005 200);
+  --gradient-primary: linear-gradient(135deg, oklch(0.58 0.15 200), oklch(0.72 0.14 195));
+  --gradient-surface: linear-gradient(180deg, oklch(0.99 0.005 200), oklch(0.95 0.02 200));
+  --shadow-elegant: 0 20px 50px -25px color-mix(in oklab, oklch(0.58 0.15 200) 45%, transparent);
+  --shadow-soft: 0 1px 2px rgb(0 0 0 / 0.04), 0 8px 24px -12px rgb(15 50 80 / 0.12);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
