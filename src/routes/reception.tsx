@@ -67,13 +67,13 @@ function ReceptionPage() {
 
   return (
     <main className="min-h-screen bg-background text-foreground">
-      <header className="border-b border-border bg-card">
-        <div className="mx-auto max-w-6xl px-6 py-4 flex items-center justify-between">
+      <header className="border-b border-border" style={{ background: "var(--gradient-surface)" }}>
+        <div className="mx-auto max-w-6xl px-6 py-5 flex items-center justify-between">
           <div>
-            <Link to="/" className="text-xs uppercase tracking-[0.3em] text-muted-foreground hover:text-foreground">
-              Queue Cure '26
+            <Link to="/" className="text-[10px] uppercase tracking-[0.4em] text-muted-foreground hover:text-foreground">
+              Queue Cure '26 / Staff
             </Link>
-            <h1 className="text-xl font-semibold">Reception</h1>
+            <h1 className="text-2xl font-semibold tracking-tight mt-1">Reception desk</h1>
           </div>
           <ConnectionBadge connected={connected} />
         </div>
@@ -81,51 +81,73 @@ function ReceptionPage() {
 
       <div className="mx-auto max-w-6xl px-6 py-8 grid lg:grid-cols-3 gap-6">
         <section className="lg:col-span-2 space-y-6">
-          <div className="rounded-2xl border border-border bg-card p-6">
-            <p className="text-xs uppercase tracking-widest text-muted-foreground">In consultation</p>
-            {state?.current ? (
-              <div className="mt-2 flex items-baseline gap-4">
-                <div className="text-5xl font-semibold tabular-nums">#{state.current.tokenNumber}</div>
-                <div className="text-muted-foreground">{state.current.name ?? "Unnamed"}</div>
-              </div>
-            ) : (
-              <p className="mt-2 text-2xl text-muted-foreground">No one is currently being seen</p>
-            )}
-            <div className="mt-6 flex flex-wrap gap-3">
+          <div
+            className="relative overflow-hidden rounded-3xl border border-border p-8 text-primary-foreground"
+            style={{ background: "var(--gradient-primary)", boxShadow: "var(--shadow-elegant)" }}
+          >
+            <div className="absolute -top-24 -right-24 h-64 w-64 rounded-full bg-white/15 blur-3xl" aria-hidden />
+            <div className="relative">
+              <p className="text-[10px] uppercase tracking-[0.4em] text-primary-foreground/70">In consultation</p>
+              {state?.current ? (
+                <div className="mt-3 flex items-baseline gap-5">
+                  <div className="text-7xl font-semibold tabular-nums leading-none">
+                    #{state.current.tokenNumber}
+                  </div>
+                  <div className="text-xl text-primary-foreground/85">
+                    {state.current.name ?? "Unnamed"}
+                  </div>
+                </div>
+              ) : (
+                <p className="mt-3 text-3xl font-medium text-primary-foreground/80">
+                  No one is being seen
+                </p>
+              )}
+            </div>
+          </div>
+
+          <div
+            className="rounded-3xl border border-border bg-card p-6"
+            style={{ boxShadow: "var(--shadow-soft)" }}
+          >
+            <div className="grid sm:grid-cols-3 gap-3">
               <Button
-                size="lg"
                 onClick={callNext}
-                disabled={waitingEmpty || !connected}
-                className="h-14 px-8 text-lg"
+                disabled={waitingEmpty}
+                className="h-16 text-lg font-semibold sm:col-span-3"
               >
                 Call Next
               </Button>
-              <Button size="lg" variant="secondary" onClick={complete} disabled={!state?.current}>
+              <Button variant="secondary" onClick={complete} disabled={!state?.current} className="h-12">
                 Complete current
               </Button>
-              <Button size="lg" variant="outline" onClick={undo}>
-                Undo
+              <Button variant="outline" onClick={undo} className="h-12">
+                Undo last call
               </Button>
+              <div className="h-12 flex items-center justify-center rounded-md bg-muted text-xs text-muted-foreground px-3">
+                Press Enter or Space
+              </div>
             </div>
-            <p className="mt-3 text-xs text-muted-foreground">
+            <p className="sr-only">
               Tip: press Enter or Space to Call Next.
             </p>
           </div>
 
-          <div className="rounded-2xl border border-border bg-card p-6">
+          <div className="rounded-3xl border border-border bg-card p-6" style={{ boxShadow: "var(--shadow-soft)" }}>
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold">Waiting list</h2>
-              <span className="text-sm text-muted-foreground">
+              <span className="text-sm text-muted-foreground tabular-nums">
                 {state?.stats.waitingCount ?? 0} waiting
               </span>
             </div>
             <ul className="mt-4 divide-y divide-border">
               {state && state.waiting.length > 0 ? (
                 state.waiting.map((p) => (
-                  <li key={p.tokenNumber} className="flex items-center justify-between py-3">
+                  <li key={p.tokenNumber} className="flex items-center justify-between py-4">
                     <div className="flex items-center gap-4">
-                      <span className="w-12 text-xl font-semibold tabular-nums">#{p.tokenNumber}</span>
-                      <span className="text-muted-foreground">{p.name ?? "Unnamed"}</span>
+                      <span className="inline-flex h-10 w-14 items-center justify-center rounded-lg bg-secondary text-base font-semibold tabular-nums text-secondary-foreground">
+                        {p.tokenNumber}
+                      </span>
+                      <span className="text-foreground">{p.name ?? "Unnamed"}</span>
                     </div>
                     <div className="text-sm text-muted-foreground tabular-nums">
                       {p.tokensAhead} ahead · ~{p.estimatedWaitMinutes} min
@@ -133,14 +155,14 @@ function ReceptionPage() {
                   </li>
                 ))
               ) : (
-                <li className="py-6 text-center text-muted-foreground">No patients waiting</li>
+                <li className="py-10 text-center text-muted-foreground">No patients waiting</li>
               )}
             </ul>
           </div>
         </section>
 
         <aside className="space-y-6">
-          <form onSubmit={addPatient} className="rounded-2xl border border-border bg-card p-6 space-y-3">
+          <form onSubmit={addPatient} className="rounded-3xl border border-border bg-card p-6 space-y-4" style={{ boxShadow: "var(--shadow-soft)" }}>
             <h2 className="text-lg font-semibold">Add patient</h2>
             <div className="space-y-2">
               <Label htmlFor="name">Name (optional)</Label>
@@ -150,14 +172,15 @@ function ReceptionPage() {
                 onChange={(e) => setName(e.target.value)}
                 placeholder="e.g. Asha"
                 autoComplete="off"
+                className="h-11"
               />
             </div>
-            <Button type="submit" className="w-full" disabled={!connected}>
+            <Button type="submit" className="w-full h-11">
               Add to queue
             </Button>
           </form>
 
-          <form onSubmit={updateAvg} className="rounded-2xl border border-border bg-card p-6 space-y-3">
+          <form onSubmit={updateAvg} className="rounded-3xl border border-border bg-card p-6 space-y-4" style={{ boxShadow: "var(--shadow-soft)" }}>
             <h2 className="text-lg font-semibold">Avg consult time</h2>
             <div className="space-y-2">
               <Label htmlFor="avg">Minutes</Label>
@@ -167,15 +190,17 @@ function ReceptionPage() {
                 min={1}
                 value={avg}
                 onChange={(e) => setAvg(e.target.value)}
+                className="h-11"
               />
             </div>
-            <Button type="submit" variant="secondary" className="w-full" disabled={!connected}>
+            <Button type="submit" variant="secondary" className="w-full h-11">
               Update
             </Button>
             {state && (
-              <p className="text-xs text-muted-foreground">
-                Effective average: {state.effectiveAvgMinutes} min · Completed today: {state.stats.completedCount}
-              </p>
+              <div className="rounded-lg bg-muted p-3 text-xs text-muted-foreground space-y-1">
+                <div className="flex justify-between"><span>Effective avg</span><span className="tabular-nums text-foreground">{state.effectiveAvgMinutes} min</span></div>
+                <div className="flex justify-between"><span>Completed today</span><span className="tabular-nums text-foreground">{state.stats.completedCount}</span></div>
+              </div>
             )}
           </form>
         </aside>
